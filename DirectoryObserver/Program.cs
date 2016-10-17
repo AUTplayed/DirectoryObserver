@@ -23,13 +23,17 @@ namespace DirectoryObserver
                 Console.ReadKey();
                 return;
             }
+            IterateDirectories(fbd.SelectedPath);
+            foreach (var p in newPaths)
+            {
+                oldPaths.Add(p);
+            }
+            Console.WriteLine($"Listening for changes in {fbd.SelectedPath}");
             do
             {
+                System.Threading.Thread.Sleep(1000);
                 IterateDirectories(fbd.SelectedPath);
                 CompareSets();
-                Console.WriteLine("\n\nPress any key to Scan again!");
-                Console.ReadKey();
-                Console.Clear();
             } while (true);
         }
 
@@ -61,7 +65,7 @@ namespace DirectoryObserver
         {
             var deleted = oldPaths.Except(newPaths).ToList();
             var added = newPaths.Except(oldPaths).ToList();
-            Console.WriteLine($"{deleted.Count + added.Count} Changes detected!\n");
+            //Console.WriteLine($"{deleted.Count + added.Count} Changes detected!\n");
             Console.ForegroundColor = ConsoleColor.DarkRed;
             foreach (var p in deleted)
             {
